@@ -1,0 +1,31 @@
+{
+  "name": "mert-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.6",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.0",
+    "google-auth-library": "^7.1.2",
+    "gravatar": "^1.8.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.14",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.6.2",
+    "nodemon": "^2.0.7",
+    "twilio": "^3.64.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server",
+    "server": "nodemon server",
+    "client": "npm start --prefix client -p 3001",
+    "dev": "concurrenty \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "author": "",
+  "license": "ISC"
+}
