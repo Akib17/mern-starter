@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
+const Post = require("../models/Post");
 const Profile = require("../models/Profile");
+const User = require("../models/User");
 const ProfileValidator = require("../validator/ProfilePostValidator");
 
 const isProfileComplete = profile => {
@@ -149,3 +151,27 @@ exports.getSingleProfile = async (req, res) => {
 };
 
 
+/**
+ * @method POST
+ * @route api/profile/:deleteId
+ * @access private
+ */
+exports.deleteProfile = async (req, res) => {
+    try {
+        // Delete all post for this user
+        await Post.deleteMany({user: req.user.id})
+        // Delete profile 
+        await Profile.findOneAndRemove({user: req.user.id})
+        // Delete user
+        await User.findOneAndRemove({ _id: req.user.id })
+        
+        res.status(204).send()
+
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({
+            msg: 'Internal server error'
+        })
+    }
+
+}
