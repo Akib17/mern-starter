@@ -18,7 +18,9 @@ const isProfileComplete = profile => {
 };
 
 /**
+ * @method GET
  * @Route /api/profile/me
+ * @access private
  */
 exports.getProfile = async (req, res) => {
     try {
@@ -40,7 +42,9 @@ exports.getProfile = async (req, res) => {
 
 
 /**
+ * @method POST
  * @Route /api/profile
+ * @access private
  */
 exports.postProfile = async (req, res) => {
     const errors = validationResult(req).formatWith(err => err.msg);
@@ -92,3 +96,56 @@ exports.postProfile = async (req, res) => {
     }
 
 };
+
+/**
+ * @method GET
+ * @route /api/profile
+ * @access public
+ */
+exports.getProfiles = async (req, res) => {
+    try {
+        let profiles = await Profile.find().populate('user', ['name', 'email']);
+
+        profiles = profiles.map(profile => ({
+            ...profile._doc,
+            isComplete: isProfileComplete(profile)
+        }));
+
+        res.status(200).json(profiles);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal server error"
+        });
+    }
+};
+
+
+/**
+ * @method GET
+ * @route /api/profile/:id
+ * @access Public
+ */
+exports.getSingleProfile = async (req, res) => {
+    try {
+        const { profileId } = req.params;
+        const profile = await Profile.findById(profileId).populate('user', ['name', 'email']);
+
+        if (!profile) {
+            res.status(400).json({
+                msg: "Profile not found"
+            });
+        }
+
+        res.status(200).json({ ...profile._doc, isComplete: isProfileComplete(profile) });
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server error"
+        });
+    }
+};
+
+
