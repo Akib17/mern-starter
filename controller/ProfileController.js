@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const Education = require("../models/Education");
 const Post = require("../models/Post");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
@@ -59,7 +60,7 @@ exports.postProfile = async (req, res) => {
         });
     }
 
-    const { company, website, location, bio, experience, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body;
+    const { company, website, location, bio, education, experience, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body;
 
     let profileFields = {};
 
@@ -82,6 +83,7 @@ exports.postProfile = async (req, res) => {
 
     try {
         let profile = await Profile.findOne({ user: req.user.id });
+
         if (profile) {
             profile = await Profile.findOneAndUpdate(
                 { user: req.user.id },
@@ -94,8 +96,6 @@ exports.postProfile = async (req, res) => {
             await profile.save();
             res.json(profile);
         }
-
-
 
     } catch (err) {
         console.log(err.message);
@@ -140,7 +140,7 @@ exports.getProfiles = async (req, res) => {
 exports.getSingleProfile = async (req, res) => {
     try {
         const { profileId } = req.params;
-        const profile = await Profile.findById(profileId).populate('user', ['name', 'email']);
+        const profile = await Profile.findById(profileId).populate('user', ['name', 'email']).populate('education');
 
         if (!profile) {
             res.status(400).json({
@@ -185,3 +185,31 @@ exports.deleteProfile = async (req, res) => {
 };
 
 
+/**
+ * @desc Add education
+ * @method POST 
+ * @route api/profile/addEdu
+ * @access private
+ */
+exports.addEdu = async (req, res) => {
+    const { school, degree, fieldofstudy, from, to, current, description } = req.body;
+
+    try {
+        let newEdu = { school, degree, fieldofstudy, from, to, current, description };
+        let edu = new Education(newEdu);
+        await edu.save();
+
+        await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $push: { 'education': edu.id } }
+        );
+
+        res.status(200).json(edu);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal server error"
+        });
+    }
+};
