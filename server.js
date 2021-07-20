@@ -3,6 +3,7 @@ const express = require("express");
 const connectDB = require("./config/db");
 const authRoute = require("./routes/AuthRoute");
 const profileRoute = require('./routes/ProfileRoute')
+const postRoute = require('./routes/PostRoute')
 
 const app = express();
 
@@ -22,7 +23,8 @@ app.use(express.json());
 
 // Define Routes
 app.use("/api/auth", authRoute); // Auth
-app.use('/api/profile', profileRoute)
+app.use('/api/profile', profileRoute); //Profile
+app.use('/api/post', postRoute) // Post
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
