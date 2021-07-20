@@ -165,35 +165,35 @@ exports.likePost = async (req, res) => {
  * @access private
  */
 exports.postComment = async (req, res) => {
-    const { id } = req.params
-    const { body } = req.body
+    const { id } = req.params;
+    const { body } = req.body;
 
     try {
-        const post = await Post.findById(id)
-        const user = await User.findById(req.user.id).select('-password')
+        const post = await Post.findById(id);
+        const user = await User.findById(req.user.id).select('-password');
         if (!post) {
             return res.status(404).json({
                 msg: 'Sorry, post not found'
-            })
+            });
         }
 
         const comment = {
             user: req.user.id,
             body,
             name: user.name,
-        }
+        };
 
-        post.comments.unshift(comment)
+        post.comments.unshift(comment);
 
-        await post.save()
+        await post.save();
 
-        res.status(200).json(post)
+        res.status(200).json(post);
 
     } catch (err) {
-        console.log(err.message)
+        console.log(err.message);
         res.status(500).json({
             msg: 'Internal server error'
-        })
+        });
     }
 };
 
@@ -205,13 +205,34 @@ exports.postComment = async (req, res) => {
  * @access private
  */
 exports.deleteComment = async (req, res) => {
+    const { commentId, id } = req.params;
     try {
-        
+        const post = await Post.findById(id);
+
+        const comment = post.comments.find(comment => comment.id === commentId);
+
+        if (!comment) {
+            return res.status(404).json({
+                msg: 'No comment found'
+            });
+        }
+
+        if (comment.user.toString() !== req.user.id) {
+            return res.status(401).json({
+                msg: 'Unauthorized user'
+            });
+        }
+
+        comment.remove();
+
+        await post.save();
+
+        res.status(200).json(post);
 
     } catch (err) {
-        console.log(err.message)
+        console.log(err.message);
         res.status(500).json({
             msg: 'Internal server error'
-        })
+        });
     }
-}
+};
