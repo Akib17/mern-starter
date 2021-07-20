@@ -46,7 +46,7 @@ exports.addPost = async (req, res) => {
 */
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().sort('-createdAt');
         res.status(200).json(posts);
     } catch (err) {
         console.log(err.message);
@@ -144,10 +144,10 @@ exports.likePost = async (req, res) => {
             });
         }
 
-        post.likes.unshift({user: req.user.id});
+        post.likes.unshift({ user: req.user.id });
 
         await post.save();
-        res.status(200).json(post)
+        res.status(200).json(post);
 
     } catch (err) {
         console.log(err.message);
@@ -156,3 +156,62 @@ exports.likePost = async (req, res) => {
         });
     }
 };
+
+
+/**
+ * @desc Comment for post
+ * @Route api/post/comment/:id
+ * @method POST
+ * @access private
+ */
+exports.postComment = async (req, res) => {
+    const { id } = req.params
+    const { body } = req.body
+
+    try {
+        const post = await Post.findById(id)
+        const user = await User.findById(req.user.id).select('-password')
+        if (!post) {
+            return res.status(404).json({
+                msg: 'Sorry, post not found'
+            })
+        }
+
+        const comment = {
+            user: req.user.id,
+            body,
+            name: user.name,
+        }
+
+        post.comments.unshift(comment)
+
+        await post.save()
+
+        res.status(200).json(post)
+
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({
+            msg: 'Internal server error'
+        })
+    }
+};
+
+
+/**
+ * @Desc Delete comment
+ * @Route api/post/comment/:id/:commentId
+ * @Method DELETE
+ * @access private
+ */
+exports.deleteComment = async (req, res) => {
+    try {
+        
+
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({
+            msg: 'Internal server error'
+        })
+    }
+}

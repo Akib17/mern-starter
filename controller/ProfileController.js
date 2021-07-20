@@ -46,7 +46,7 @@ exports.getProfile = async (req, res) => {
 
 
 /**
- * @desc Create new Profile
+ * @desc Create new Profile/ Update Profile
  * @method POST
  * @Route /api/profile
  * @access private
