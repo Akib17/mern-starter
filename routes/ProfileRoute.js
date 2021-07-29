@@ -1,4 +1,4 @@
-const { getProfile, postProfile, getProfiles, getSingleProfile, deleteProfile, addEdu } = require('../controller/ProfileController');
+const { getProfile, postProfile, getProfiles, getSingleProfile, deleteProfile, addEdu, deleteEducation } = require('../controller/ProfileController');
 const auth = require('../middleware/auth');
 const eduValidator = require('../validator/EduValidator');
 const ProfileValidator = require('../validator/ProfilePostValidator');
@@ -11,5 +11,6 @@ router.get('/', getProfiles); // Get all Profile
 router.get('/:profileId', getSingleProfile); // Get single Profile
 router.delete('/', auth, deleteProfile); // Delete Profile
 router.post('/addEdu', eduValidator, auth, addEdu); // Add Education
+router.delete('/edu/:id', auth, deleteEducation); // Delete Education
 
 module.exports = router;

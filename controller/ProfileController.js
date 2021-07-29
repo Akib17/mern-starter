@@ -28,7 +28,7 @@ const isProfileComplete = profile => {
  */
 exports.getProfile = async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email']);
+        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email']).populate('education');
 
         if (!profile) {
             return res.status(404).json({
@@ -213,3 +213,26 @@ exports.addEdu = async (req, res) => {
         });
     }
 };
+
+/**
+ * @Desc Delete Education
+ * @Route api/profile/edu/:id
+ * @Access private
+ * @Method POST
+ */
+exports.deleteEducation = async (req, res) => {
+    const { id } = req.params
+    try {
+        await Education.findByIdAndDelete(id)
+
+        res.status(200).json({
+            msg: 'Delete successful'
+        })
+
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({
+            msg: 'Internal server error'
+        })
+    }
+}

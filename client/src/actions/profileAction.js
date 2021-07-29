@@ -115,7 +115,7 @@ export const addEducation = formData => async (dispatch) => {
     }
 };
 
-// Delete Education 
+// Delete Education
 export const deleteEducation = id => async (dispatch) => {
     try {
         const res = await axios.delete(`/api/profile/edu/${id}`);
