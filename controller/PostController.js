@@ -138,13 +138,13 @@ exports.likePost = async (req, res) => {
             });
         }
 
-        if (post.likes.find(like => like.user.toString() === req.user.id)) {
-            return res.status(400).json({
-                msg: 'Post already liked'
-            });
-        }
+        const index = post.likes.findIndex(post => post.user.toString() === req.user.id)
 
-        post.likes.unshift({ user: req.user.id });
+        if (index === -1) {
+            post.likes.push({ user: req.user.id });
+        } else {
+            post.likes = post.likes.filter(post => post.user.toString() !== req.user.id)
+        }
 
         await post.save();
         res.status(200).json(post);
