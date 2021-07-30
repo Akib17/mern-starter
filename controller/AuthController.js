@@ -94,7 +94,7 @@ exports.activateAccount = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user.isActive) {
-            return res.status(400).json({
+            return res.status(200).json({
                 msg: 'Activation Failed',
                 error: 'Already Active user'
             });

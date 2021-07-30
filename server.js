@@ -5,6 +5,7 @@ const authRoute = require("./routes/AuthRoute");
 const profileRoute = require('./routes/ProfileRoute');
 const postRoute = require('./routes/PostRoute');
 const uploadRoute = require('./routes/UploadRoute');
+const cors = require('cors')
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 
 // Allow public directory to access static files
 app.use(express.static("public"));
+app.use(cors())
 // Allow access to request.body using multipart form
 app.use(express.urlencoded({ extended: false }));
 // Allow access to request.body using body-parse inbuilt express
