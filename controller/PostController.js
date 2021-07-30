@@ -138,16 +138,16 @@ exports.likePost = async (req, res) => {
             });
         }
 
-        const index = post.likes.findIndex(post => post.user.toString() === req.user.id)
+        const index = post.likes.findIndex(post => post.user.toString() === req.user.id);
 
         if (index === -1) {
             post.likes.push({ user: req.user.id });
         } else {
-            post.likes = post.likes.filter(post => post.user.toString() !== req.user.id)
+            post.likes = post.likes.filter(post => post.user.toString() !== req.user.id);
         }
 
         await post.save();
-        res.status(200).json(post);
+        res.status(200).json(post.likes);
 
     } catch (err) {
         console.log(err.message);
@@ -187,7 +187,7 @@ exports.postComment = async (req, res) => {
 
         await post.save();
 
-        res.status(200).json(post);
+        res.status(200).json(post.comments);
 
     } catch (err) {
         console.log(err.message);
