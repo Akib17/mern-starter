@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { Fragment } from 'react';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { loadUser } from './actions/authAction';
 import ActivationAccount from './components/ActivationAccount';
 import Contact from './components/Contact';
 import Dashboard from './components/dashboard/Dashboard';
@@ -16,6 +19,11 @@ if (localStorage.getItem('token')) {
 }
 
 function App() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(loadUser())
+  })
+  
   return (
     <BrowserRouter>
       <Fragment>

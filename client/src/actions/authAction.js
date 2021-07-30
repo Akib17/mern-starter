@@ -26,7 +26,7 @@ export const loadUser = () => async (dispatch) => {
 /**
  * @Registration
  */
-export const registration = ({ name, email, password, phone }) => async (dispatch) => {
+export const registration = ({ name, email, password, phone }, history) => async (dispatch) => {
 
     try {
         const body = { name, email, password, phone };
@@ -45,6 +45,8 @@ export const registration = ({ name, email, password, phone }) => async (dispatc
 
         dispatch(loadUser());
 
+        history.push('/dashboard')
+
     } catch (err) {
         const errors = err.response;
         console.log(errors);
@@ -59,7 +61,7 @@ export const registration = ({ name, email, password, phone }) => async (dispatc
 /**
  * @Login
  */
-export const login = ({ email, password }) => async ({ dispatch }) => {
+export const login = ({email, password}, history) => async ( dispatch ) => {
     const body = { email, password };
     try {
         const config = {
@@ -76,6 +78,8 @@ export const login = ({ email, password }) => async ({ dispatch }) => {
         });
 
         dispatch(loadUser());
+
+        history.push('/dashboard')
 
     } catch (err) {
         const errors = err.response;
