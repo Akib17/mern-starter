@@ -1,4 +1,4 @@
-import { ADD_COMMENT, ADD_POST, DELETE_COMMENT, DELETE_POST, GET_POST, GET_POSTS, UPDATE_LIKE, UPDATE_POST } from "../actions/types";
+import { ADD_COMMENT, ADD_POST, DELETE_COMMENT, DELETE_POST, GET_POST, GET_POSTS, POST_ERROR, UPDATE_LIKE, UPDATE_POST } from "../actions/types";
 
 const initialState = {
     posts: [],
@@ -54,6 +54,11 @@ const postReducer = (state = initialState, action) => {
                     comments: state.post.comments.filter(comment => comment._id !== action.payload)
                 }
             };
+        case POST_ERROR:
+            return {
+                ...state,
+                loading: false
+            }
         default:
             return state;
     }
