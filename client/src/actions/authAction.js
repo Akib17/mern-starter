@@ -83,7 +83,7 @@ export const login = ({email, password}, history) => async ( dispatch ) => {
 
     } catch (err) {
         const errors = err.response;
-        console.log(errors);
+        console.log(errors.data.errors);
         dispatch({ type: LOGIN_FAIL });
     }
 };

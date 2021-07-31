@@ -32,6 +32,7 @@ const Login = () => {
                     <input name="password" onChange={e => onChangeHandler(e)} type="password" placeholder="Your Password" className="w-full py-1.5 pl-3 mb-4 text-gray-800 focus:outline-none" />
                     <button type="submit" className="bg-gray-300 text-gray-800 font-semibold py-1.5 w-full">Login</button>
                 </form>
+                <h2 className="mt-2 text-gray-300">Forgot password? <NavLink className="underline" to="/reset"> Reset now </NavLink></h2>
                 <h2 className="mt-5 text-gray-300">Don't have any account? <NavLink className="underline" to="/register"> Register </NavLink></h2>
             </div>
         </div>

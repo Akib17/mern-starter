@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { loadUser } from './actions/authAction';
@@ -10,6 +9,8 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Nav from './components/Nav';
 import Register from './components/Register';
+import Reset from './components/Reset';
+import ResetPassword from './components/ResetPassword';
 import PrivateRoute from './components/routing/PrivateRoute';
 import User from './components/User';
 import setAuthToken from './utils/setAuthToken';
@@ -19,15 +20,15 @@ if (localStorage.getItem('token')) {
 }
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(loadUser())
-  })
-  
+    dispatch(loadUser());
+  });
+
   return (
     <BrowserRouter>
       <Fragment>
-        <Nav/>
+        <Nav />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/users" component={User} />
@@ -35,6 +36,8 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/contact" component={Contact} />
           <Route exact path="/api/auth/activate/:activateToken" component={ActivationAccount} />
+          <Route exact path="/reset" component={Reset} />
+          <Route exact path="/password/reset/verify/:token" component={ResetPassword} />
           <PrivateRoute exact path="/dashboard" component={Dashboard} />
         </Switch>
       </Fragment>
