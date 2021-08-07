@@ -70,7 +70,7 @@ exports.signupController = async (req, res) => {
             }
         };
 
-        jwt.sign(payload, config.get('jwt_secret'), { expiresIn: 3600 }, (err, token) => {
+        jwt.sign(payload, config.get('jwt_secret'), (err, token) => {
             if (err) throw err;
             res.json({ token });
         });
@@ -178,7 +178,7 @@ exports.loginController = async (req, res) => {
             }
         };
 
-        jwt.sign(payload, config.get('jwt_secret'), { expiresIn: 60 * 60 }, (err, token) => {
+        jwt.sign(payload, config.get('jwt_secret'), (err, token) => {
             if (err) throw err;
             res.json({ token });
         });
@@ -192,6 +192,8 @@ exports.loginController = async (req, res) => {
 
 /**
  * @route POST(api/auth/password/reset/request)
+ * @desc Password Reset request
+ * @access private
  */
 exports.passwordResetRequest = async (req, res) => {
     const { email } = req.body;
@@ -207,10 +209,8 @@ exports.passwordResetRequest = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({
-                error: {
-                    msg: 'User not found'
-                }
+            return res.status(200).json({
+                msg: 'User not found'
             });
         }
 
@@ -250,6 +250,8 @@ exports.passwordResetRequest = async (req, res) => {
 
 /**
  * @route POST(/auth/password/verify/:passwordResetToken)
+ * @Desc password Reset verify
+ * @access private
  */
 exports.passwordResetVerify = async (req, res) => {
     const { passwordResetToken } = req.params;
@@ -258,7 +260,7 @@ exports.passwordResetVerify = async (req, res) => {
     try {
         const errors = validationResult(req).formatWith(err => err.msg);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.json({
                 error: errors.mapped()
             });
         }
@@ -267,18 +269,14 @@ exports.passwordResetVerify = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({
-                error: {
-                    msg: "User not found"
-                }
+            return res.json({
+                msg: "User not found"
             });
         }
 
         if (!user.passwordResetToken) {
             return res.json({
-                error: {
-                    msg: "Invalid Token"
-                }
+                msg: "Invalid Token"
             });
         }
 

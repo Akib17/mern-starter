@@ -60,7 +60,7 @@ exports.postProfile = async (req, res) => {
         });
     }
 
-    const { company, website, location, bio, education, experience, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body;
+    const { company, website, location, bio, experience, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body;
 
     let profileFields = {};
 
@@ -114,7 +114,7 @@ exports.postProfile = async (req, res) => {
  */
 exports.getProfiles = async (req, res) => {
     try {
-        let profiles = await Profile.find().populate('user', ['name', 'email']);
+        let profiles = await Profile.find().populate('user', ['name', 'email', 'avatar']);
 
         profiles = profiles.map(profile => ({
             ...profile._doc,
@@ -140,7 +140,7 @@ exports.getProfiles = async (req, res) => {
 exports.getSingleProfile = async (req, res) => {
     try {
         const { profileId } = req.params;
-        const profile = await Profile.findById(profileId).populate('user', ['name', 'email']).populate('education');
+        const profile = await Profile.findById(profileId).populate('user', ['name', 'email', 'avatar']).populate('education');
 
         if (!profile) {
             res.status(400).json({

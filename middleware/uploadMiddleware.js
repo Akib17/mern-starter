@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,18 +16,18 @@ const upload = multer({
         fileSize: 1024 * 1024 * 5 // Upto 5 mb
     },
     fileFilter: (req, file, cb) => {
-        const types = /jpeg|jpg|png|gif/
+        const types = /jpeg|jpg|png|gif/;
         const extName = types.test(
             path.extname(file.originalname).toLowerCase()
-        )
-        const mimeType = types.test(file.mimetype)
+        );
+        const mimeType = types.test(file.mimetype);
 
-        if (extName && mimeTypes) {
-            cb(null, true)
+        if (extName && mimeType) {
+            cb(null, true);
         } else {
-            cb(new Error('Only Image'))
+            cb(new Error('Only Image'));
         }
     }
 });
 
-module.exports = upload
+module.exports = upload;

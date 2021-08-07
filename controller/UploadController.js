@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const fs = require('fs')
 
 /**
  * @Desc Image upload
@@ -13,12 +14,12 @@ exports.uploadImage = async (req, res) => {
             const oldAvatar = user.avatar;
 
             // Upload image and save user to the database
-            user.avatar = `/uploads/${req.file.filename}`;
+            user.avatar = `/upload/${req.file.filename}`;
             await user.save();
 
             // Remove old profile image if includes in Gravatar
             if (!oldAvatar.includes('/www.gravatar.com')) {
-                fs.unlink(`public/${oldAvatar}`, err => {
+                fs.unlink(`public${oldAvatar}`, err => {
                     if (err) console.log(err);
                 });
             }
