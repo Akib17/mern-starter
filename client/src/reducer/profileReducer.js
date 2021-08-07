@@ -1,4 +1,4 @@
-import { ADD_EDUCATION, CREATE_PROFILE, DELETE_PROFILE, GET_PROFILE, GET_REPOS, PROFILE_ERROR, UPDATE_PROFILE } from "../actions/types";
+import { ADD_EDUCATION, CREATE_PROFILE, DELETE_PROFILE, GET_PROFILE, GET_PROFILES, LOGOUT, PROFILE_ERROR, UPDATE_PROFILE } from "../actions/types";
 
 const initialState = {
     // Get single Profile
@@ -20,6 +20,11 @@ const profileReducer = (state = initialState, action) => {
                 profile: action.payload,
                 loading: false
             };
+        case GET_PROFILES:
+            return {
+                ...state,
+                profiles: action.payload
+            };
         case PROFILE_ERROR:
             return {
                 ...state,
@@ -30,7 +35,6 @@ const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 profile: null,
-                repos: [],
                 loading: false
             };
         case ADD_EDUCATION:
@@ -38,7 +42,7 @@ const profileReducer = (state = initialState, action) => {
                 ...state,
                 education: action.payload,
                 loading: false
-            }
+            };
         default:
             return state;
     }

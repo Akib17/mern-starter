@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
-import { login } from '../actions/authAction';
+import { login } from '../../actions/authAction';
 
 const Login = () => {
     const dispatch = useDispatch();

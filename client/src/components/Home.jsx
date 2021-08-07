@@ -8,7 +8,7 @@ const Home = () => {
             <p className="my-5 text-gray-600 text-lg font-medium">This is a MERN Stack Authentication Project</p>
             <div className="flex">
                 <NavLink className="text-white bg-gray-700 px-10 py-2 rounded-sm mr-4" to="/register">Sign up</NavLink>
-                <NavLink className="text-white bg-gray-700 px-10 py-2 rounded-sm mr-4" to="/register">Login</NavLink>
+                <NavLink className="text-white bg-gray-700 px-10 py-2 rounded-sm mr-4" to="/login">Login</NavLink>
             </div>
         </div>
     );

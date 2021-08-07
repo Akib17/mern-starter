@@ -33,8 +33,9 @@ const authReducer = (state = initialState, action) => {
             localStorage.removeItem('token');
             return {
                 ...state,
-                isAuthenticated: false,
+                token: null,
                 user: null,
+                isAuthenticated: false,
                 loading: false
             };
         case UPLOAD_PROFILE_PICTURE:

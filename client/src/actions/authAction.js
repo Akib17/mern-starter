@@ -1,6 +1,6 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
-import { AUTH_ERROR, LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT, REGISTRATION_FAIL, REGISTRATION_SUCCESS, USER_LOADED } from "./types";
+import { AUTH_ERROR, LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT, PROFILE_ERROR, REGISTRATION_FAIL, REGISTRATION_SUCCESS, UPLOAD_PROFILE_PICTURE, USER_LOADED } from "./types";
 
 export const loadUser = () => async (dispatch) => {
     if (localStorage.getItem('token')) {
@@ -88,10 +88,23 @@ export const login = ({email, password}, history) => async ( dispatch ) => {
     }
 };
 
-
-/**
- * @Logout
- */
-export const logout = () => (dispatch) => {
-    dispatch({ type: LOGOUT });
+// Upload Profile Picture
+export const uploadProfilePicture = (data, cb) => async (dispatch) => {
+    try {
+        const res = await axios.post('/api/upload/avatar', data);
+        dispatch({
+            type: UPLOAD_PROFILE_PICTURE,
+            payload: res.data.avatar
+        });
+        cb();
+    } catch (err) {
+        console.log(err);
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: {
+                msg: "Upload failed",
+                status: 400
+            }
+        });
+    }
 };

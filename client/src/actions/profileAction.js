@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ACCOUNT_DELETE, CREATE_PROFILE, DELETE_EDUCATION, DELETE_PROFILE, EDUCATION_FAILED, GET_PROFILE, GET_PROFILES, PROFILE_ERROR, UPDATE_PROFILE } from "./types";
+import { ACCOUNT_DELETE, CREATE_PROFILE, DELETE_EDUCATION, DELETE_PROFILE, EDUCATION_FAILED, GET_PROFILE, GET_PROFILES, PROFILE_ERROR, UPDATE_PROFILE, UPLOAD_PROFILE_PICTURE } from "./types";
 
 // Get all profile
 export const getProfiles = () => async (dispatch) => {
@@ -90,7 +90,7 @@ export const createProfile = (formData, history, edit = false) => async (dispatc
 };
 
 // Add education
-export const addEducation = formData => async (dispatch) => {
+export const addEducation = (formData, history) => async (dispatch) => {
     try {
         const config = {
             header: {
@@ -103,6 +103,8 @@ export const addEducation = formData => async (dispatch) => {
             type: UPDATE_PROFILE,
             payload: res.data
         });
+
+        history.push('/dashboard')
 
     } catch (err) {
         dispatch({
@@ -158,3 +160,4 @@ export const deleteProfile = () => async (dispatch) => {
         }
     }
 };
+
