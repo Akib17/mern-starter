@@ -1,4 +1,4 @@
-import { ADD_EDUCATION, CREATE_PROFILE, DELETE_PROFILE, GET_PROFILE, GET_PROFILES, LOGOUT, PROFILE_ERROR, UPDATE_PROFILE } from "../actions/types";
+import { ADD_EDUCATION, ADD_EXPERIENCE, CREATE_PROFILE, DELETE_EXPERIENCE, DELETE_PROFILE, GET_PROFILE, GET_PROFILES, PROFILE_ERROR, UPDATE_EXPERIENCE, UPDATE_PROFILE } from "../actions/types";
 
 const initialState = {
     // Get single Profile
@@ -7,7 +7,8 @@ const initialState = {
     profiles: [],
     loading: true,
     error: {},
-    education: []
+    education: [],
+    experience: []
 };
 
 const profileReducer = (state = initialState, action) => {
@@ -41,6 +42,19 @@ const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 education: action.payload,
+                loading: false
+            };
+        case ADD_EXPERIENCE:
+        case UPDATE_EXPERIENCE:
+            return {
+                ...state,
+                experience: [...state.experience, action.payload],
+                loading: false
+            };
+        case DELETE_EXPERIENCE:
+            return {
+                ...state,
+                experience: state.experience.filter(exp => exp._id !== action.payload),
                 loading: false
             };
         default:

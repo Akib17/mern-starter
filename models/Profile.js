@@ -20,10 +20,10 @@ const ProfileSchema = new Schema(
         },
         bio: String,
         githubusername: String,
-        experience: [
+        experiences: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'experience'
+                ref: "experience"
             }
         ],
         education: [

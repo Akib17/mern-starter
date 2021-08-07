@@ -17,11 +17,16 @@ const expSchema = new Schema({
         type: Date,
         required: true,
     },
-    current: String,
-    to: Date,
+    current: {
+        type: Boolean,
+        default: false
+    },
+    to: {
+        type: Date
+    },
     description: String,
 });
 
-const Experience = model("experience", expSchema);
+const Experience = model('experience', expSchema);
 
 module.exports = Experience;

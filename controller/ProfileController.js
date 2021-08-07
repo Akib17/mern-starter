@@ -16,8 +16,6 @@ const isProfileComplete = profile => {
     if (!profile.bio) isComplete = false;
     if (!profile.githubusername) isComplete = false;
     if (!profile.skills && profile.skills.length === 0) isComplete = false;
-    if (!profile.experience && profile.experience.length === 0) isComplete = false;
-    if (!profile.education && profile.education.length === 0) isComplete = false;
     return isComplete;
 };
 
@@ -29,7 +27,7 @@ const isProfileComplete = profile => {
  */
 exports.getProfile = async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email']).populate('education');
+        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email']).populate('education').populate('experiences');
 
         if (!profile) {
             return res.status(404).json({
@@ -61,7 +59,7 @@ exports.postProfile = async (req, res) => {
         });
     }
 
-    const { company, website, location, bio, experience, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body;
+    const { company, website, location, bio, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body;
 
     let profileFields = {};
 
@@ -70,7 +68,6 @@ exports.postProfile = async (req, res) => {
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
     if (bio) profileFields.bio = bio;
-    if (experience) profileFields.experience = experience;
     if (status) profileFields.status = status;
     if (githubusername) profileFields.githubusername = githubusername;
     if (skills) {
@@ -137,11 +134,12 @@ exports.getProfiles = async (req, res) => {
  * @method GET
  * @route /api/profile/:id
  * @access Public
+ * @desc for public profile details
  */
 exports.getSingleProfile = async (req, res) => {
     try {
         const { profileId } = req.params;
-        const profile = await Profile.findById(profileId).populate('user', ['name', 'email', 'avatar']).populate('education');
+        const profile = await Profile.findById(profileId).populate('user', ['name', 'email', 'avatar']).populate('education').populate('experiences');
 
         if (!profile) {
             res.status(400).json({
@@ -152,7 +150,7 @@ exports.getSingleProfile = async (req, res) => {
         res.status(200).json({ ...profile._doc, isComplete: isProfileComplete(profile) });
 
     } catch (err) {
-        console.log(err.message);
+        console.log(err);
         res.status(500).json({
             msg: "Internal Server error"
         });
@@ -298,7 +296,7 @@ exports.addExperience = async (req, res) => {
 
         await Profile.findOneAndUpdate(
             { user: req.user.id },
-            { $push: { 'experience': exp.id } }
+            { $push: { 'experiences': exp.id } }
         );
 
         res.status(200).json(exp);
@@ -313,7 +311,7 @@ exports.addExperience = async (req, res) => {
 
 
 /**
- * @METHOD DELETE
+ * @method DELETE
  * @route api/profile/experience/:id
  * @desc delete experience
  * @access private
@@ -325,7 +323,7 @@ exports.deleteExperience = async (req, res) => {
 
         await Profile.findOneAndUpdate(
             { user: req.user.id },
-            { $pull: { 'experience': id } }
+            { $pull: { 'experiences': id } }
         );
 
         res.status(200).json({
@@ -342,7 +340,7 @@ exports.deleteExperience = async (req, res) => {
 
 
 /**
- * @METHOD PUT
+ * @method PUT
  * @route api/profile/experience/:id
  * @desc Update experience
  * @access private
@@ -372,3 +370,31 @@ exports.updateExperience = async (req, res) => {
         });
     }
 };
+
+
+/**
+ * @method GET
+ * @route api/profile/experience/
+ * @desc Get all experience
+ * @access private
+ */
+exports.getExperience = async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id }).select(['-skills', '-education', '-user', '-status']).populate('experiences');
+
+        if (!profile) {
+            return res.status(200).json({
+                msg: 'Not found'
+            });
+        }
+
+        res.status(200).json(profile);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: 'Internal server error'
+        });
+    }
+};
+
