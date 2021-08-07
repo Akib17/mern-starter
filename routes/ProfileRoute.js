@@ -1,4 +1,4 @@
-const { getProfile, postProfile, getProfiles, getSingleProfile, deleteProfile, addEdu, deleteEducation, addExperience, deleteExperience, updateExperience } = require('../controller/ProfileController');
+const { getProfile, postProfile, getProfiles, getSingleProfile, deleteProfile, addEdu, deleteEducation, addExperience, deleteExperience, updateExperience, updateEducation } = require('../controller/ProfileController');
 const auth = require('../middleware/auth');
 const eduValidator = require('../validator/EduValidator');
 const ProfileValidator = require('../validator/ProfilePostValidator');
@@ -11,6 +11,7 @@ router.get('/', getProfiles); // Get all Profile
 router.get('/:profileId', getSingleProfile); // Get single Profile
 router.delete('/', auth, deleteProfile); // Delete Profile
 router.post('/addEdu', eduValidator, auth, addEdu); // Add Education
+router.put('/education/:id', auth, eduValidator, updateEducation) // Update Education
 router.delete('/edu/:id', auth, deleteEducation); // Delete Education
 router.post('/addExp', auth, addExperience); // Add Experience
 router.delete('/experience/:id', auth, deleteExperience); // Delete Experience

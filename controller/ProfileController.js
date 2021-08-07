@@ -226,6 +226,11 @@ exports.deleteEducation = async (req, res) => {
     try {
         await Education.findByIdAndDelete(id);
 
+        await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $pull: { 'education': id } }
+        );
+
         res.status(200).json({
             msg: 'Delete successful'
         });
@@ -234,6 +239,36 @@ exports.deleteEducation = async (req, res) => {
         console.log(err.message);
         res.status(500).json({
             msg: 'Internal server error'
+        });
+    }
+};
+
+
+/**
+ * @Desc Update Education
+ * @Route api/profile/edu/:id
+ * @Access private
+ * @Method PUT
+ */
+exports.updateEducation = async (req, res) => {
+    const { id } = req.params;
+    const { school, degree, fieldofstudy, from, to, current, description } = req.body;
+
+    try {
+        let newEdu = { school, degree, fieldofstudy, from, to, current, description };
+
+        const edu = await Education.findOneAndUpdate(
+            id,
+            { $set: newEdu },
+            { new: true }
+        );
+
+        res.status(200).json(edu);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal server error"
         });
     }
 };
@@ -316,7 +351,7 @@ exports.updateExperience = async (req, res) => {
     const { id } = req.params;
     const { title, company, location, from, to, current, description } = req.body;
     try {
-        const experience =  { title, company, location, from, to, current, description }
+        const experience = { title, company, location, from, to, current, description };
         if (!experience) {
             return res.json({
                 msg: 'No experience found'
