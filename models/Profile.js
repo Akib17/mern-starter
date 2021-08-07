@@ -22,28 +22,9 @@ const ProfileSchema = new Schema(
         githubusername: String,
         experience: [
             {
-                title: {
-                    type: String,
-                    required: true,
-                },
-                company: {
-                    type: String,
-                    required: true,
-                },
-                location: String,
-                from: {
-                    type: Date,
-                    required: true,
-                },
-                to: {
-                    type: Date,
-                },
-                current: {
-                    type: Boolean,
-                    default: false,
-                },
-                description: String,
-            },
+                type: Schema.Types.ObjectId,
+                ref: 'experience'
+            }
         ],
         education: [
             {

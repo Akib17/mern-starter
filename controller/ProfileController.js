@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const Education = require("../models/Education");
+const Experience = require("../models/Experience");
 const Post = require("../models/Post");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
@@ -221,18 +222,118 @@ exports.addEdu = async (req, res) => {
  * @Method POST
  */
 exports.deleteEducation = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     try {
-        await Education.findByIdAndDelete(id)
+        await Education.findByIdAndDelete(id);
 
         res.status(200).json({
             msg: 'Delete successful'
-        })
+        });
 
     } catch (err) {
-        console.log(err.message)
+        console.log(err.message);
         res.status(500).json({
             msg: 'Internal server error'
-        })
+        });
     }
-}
+};
+
+
+/**
+ * @route /api/profile/addExp
+ * @desc Add new Experience to the profile
+ * @access private
+ * @method POST
+*/
+exports.addExperience = async (req, res) => {
+    const { title, company, location, from, to, current, description } = req.body;
+
+    try {
+        const profile = await Profile.findOne({ user: req.user.id });
+        const newExp = { title, company, location, from, to, current, description };
+
+        if (!profile) {
+            return res.json({
+                msg: 'Please create your profile first'
+            });
+        }
+
+        const exp = new Experience(newExp);
+        await exp.save();
+
+        await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $push: { 'experience': exp.id } }
+        );
+
+        res.status(200).json(exp);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: 'Internal server error'
+        });
+    }
+};
+
+
+/**
+ * @METHOD DELETE
+ * @route api/profile/experience/:id
+ * @desc delete experience
+ * @access private
+ */
+exports.deleteExperience = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Experience.findByIdAndDelete(id);
+
+        await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $pull: { 'experience': id } }
+        );
+
+        res.status(200).json({
+            msg: 'Delete successful'
+        });
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: 'Internal server error'
+        });
+    }
+};
+
+
+/**
+ * @METHOD PUT
+ * @route api/profile/experience/:id
+ * @desc Update experience
+ * @access private
+ */
+exports.updateExperience = async (req, res) => {
+    const { id } = req.params;
+    const { title, company, location, from, to, current, description } = req.body;
+    try {
+        const experience =  { title, company, location, from, to, current, description }
+        if (!experience) {
+            return res.json({
+                msg: 'No experience found'
+            });
+        }
+
+        const exp = await Experience.findOneAndUpdate(id,
+            { $set: experience },
+            { new: true }
+        );
+
+        res.status(200).json(exp);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: 'Internal server error'
+        });
+    }
+};
