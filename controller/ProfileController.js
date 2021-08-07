@@ -271,6 +271,32 @@ exports.updateEducation = async (req, res) => {
     }
 };
 
+/**
+ * @route api/profile/education/all
+ * @desc Get all Education for a single user
+ * @access private
+ * @method GET
+ */
+exports.getAllEducation = async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id }).populate('education')
+
+        if (!profile) {
+            return res.status(200).json({
+                msg: 'Please create a profile'
+            })
+        }
+
+        res.status(200).json(profile.education)
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            msg: 'Internal server error'
+        })
+    }
+}
+
 
 /**
  * @route /api/profile/addExp
@@ -380,7 +406,7 @@ exports.updateExperience = async (req, res) => {
  */
 exports.getExperience = async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).select(['-skills', '-education', '-user', '-status']).populate('experiences');
+        const profile = await Profile.findOne({ user: req.user.id }).populate('experiences');
 
         if (!profile) {
             return res.status(200).json({
@@ -388,7 +414,7 @@ exports.getExperience = async (req, res) => {
             });
         }
 
-        res.status(200).json(profile);
+        res.status(200).json(profile.experiences);
 
     } catch (err) {
         console.log(err.message);
