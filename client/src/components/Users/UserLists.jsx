@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const UserLists = ({ profile }) => {
     return (
-        <div className="shadow px-8 grid grid-cols-2 justify-between rounded-sm bg-gray-300 text-gray-700 w-full py-12">
+        <div className="shadow px-8 grid grid-cols-2 justify-between rounded-sm bg-gray-300 text-gray-700 w-full py-12 mb-6">
             <div className="flex">
                 <img src={profile && profile.user.avatar} className="rounded-full w-28 h-28" alt="" />
                 <div className="ml-10">

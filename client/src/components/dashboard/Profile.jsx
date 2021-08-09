@@ -4,8 +4,8 @@ import { useHistory } from 'react-router';
 import { createProfile, getProfile } from '../../actions/profileAction';
 
 const Profile = () => {
-    const { profile } = useSelector(state => state.profile);
-    const history = useHistory()
+    const { profile, loading } = useSelector(state => state.profile);
+    const history = useHistory();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         facebook: '',
@@ -15,11 +15,21 @@ const Profile = () => {
         youtube: '',
         website: '',
         skills: '',
+        status: ''
     });
 
     useEffect(() => {
         dispatch(getProfile());
-    }, [getProfile]);
+
+        console.log(formData)
+
+        if (profile) {
+            setFormData({
+                ...profile,
+                skills: profile.skills.join(', ')
+            });
+        }
+    }, [getProfile, loading]);
 
     const onChangeHandler = e => {
         setFormData({
@@ -30,7 +40,8 @@ const Profile = () => {
 
     const onSubmitHandler = e => {
         e.preventDefault();
-        dispatch(createProfile(formData, history))
+        console.log(formData);
+        dispatch(createProfile(formData, history));
     };
 
     return (
@@ -41,32 +52,40 @@ const Profile = () => {
 
                 <form action="" className="mt-5" onSubmit={onSubmitHandler}>
                     <div className="mb-4">
-                        <input name="skills" onChange={e => onChangeHandler(e)} type="text" placeholder="Your skills *" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.skills} name="skills" onChange={e => onChangeHandler(e)} type="text" placeholder="Your skills *" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                         <span className="text-sm font-medium">Ex: Javascript, React, Nodejs</span>
                     </div>
 
                     <div className="mb-4">
-                        <input name="website" onChange={e => onChangeHandler(e)} type="text" placeholder="Your website" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.status} name="status" onChange={e => onChangeHandler(e)} type="text" placeholder="Your Job" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                     </div>
 
                     <div className="mb-4">
-                        <input name="facebook" onChange={e => onChangeHandler(e)} type="text" placeholder="Your facebook profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.website} name="website" onChange={e => onChangeHandler(e)} type="text" placeholder="Your website" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                     </div>
 
                     <div className="mb-4">
-                        <input name="twitter" onChange={e => onChangeHandler(e)} type="text" placeholder="Your twitter profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.company} name="company" onChange={e => onChangeHandler(e)} type="text" placeholder="Your website" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                     </div>
 
                     <div className="mb-4">
-                        <input name="linkedin" onChange={e => onChangeHandler(e)} type="text" placeholder="Your linkedin profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.facebook} name="facebook" onChange={e => onChangeHandler(e)} type="text" placeholder="Your facebook profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                     </div>
 
                     <div className="mb-4">
-                        <input name="instagram" onChange={e => onChangeHandler(e)} type="text" placeholder="Your instagram profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.twitter} name="twitter" onChange={e => onChangeHandler(e)} type="text" placeholder="Your twitter profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                     </div>
 
                     <div className="mb-4">
-                        <input name="youtube" onChange={e => onChangeHandler(e)} type="text" placeholder="Your youtube channel" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                        <input value={formData.linkedin} name="linkedin" onChange={e => onChangeHandler(e)} type="text" placeholder="Your linkedin profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                    </div>
+
+                    <div className="mb-4">
+                        <input value={formData.instagram} name="instagram" onChange={e => onChangeHandler(e)} type="text" placeholder="Your instagram profile" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
+                    </div>
+
+                    <div className="mb-4">
+                        <input value={formData.youtube} name="youtube" onChange={e => onChangeHandler(e)} type="text" placeholder="Your youtube channel" className="w-full py-1.5 pl-3 text-gray-800 focus:outline-none" />
                     </div>
 
                     <button type="submit" className="inline-block mt-3 bg-gray-600 rounded py-1.5 px-12 text-white"> {!profile ? 'Create' : 'Update'} </button>
