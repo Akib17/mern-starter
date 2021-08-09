@@ -27,7 +27,7 @@ const isProfileComplete = profile => {
  */
 exports.getProfile = async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email']).populate('education').populate('experiences');
+        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email'])
 
         if (!profile) {
             return res.status(404).json({
