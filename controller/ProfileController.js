@@ -27,7 +27,7 @@ const isProfileComplete = profile => {
  */
 exports.getProfile = async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email'])
+        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email']);
 
         if (!profile) {
             return res.status(404).json({
@@ -279,23 +279,23 @@ exports.updateEducation = async (req, res) => {
  */
 exports.getAllEducation = async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate('education')
+        const profile = await Profile.findOne({ user: req.user.id }).populate('education');
 
         if (!profile) {
             return res.status(200).json({
                 msg: 'Please create a profile'
-            })
+            });
         }
 
-        res.status(200).json(profile.education)
+        res.status(200).json(profile.education);
 
     } catch (err) {
-        console.log(err)
+        console.log(err);
         res.status(500).json({
             msg: 'Internal server error'
-        })
+        });
     }
-}
+};
 
 
 /**

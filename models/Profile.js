@@ -32,13 +32,13 @@ const ProfileSchema = new Schema(
                 ref: 'education'
             }
         ],
-        social: {
-            youtube: String,
-            twitter: String,
-            facebook: String,
-            linkedin: String,
-            instagram: String,
+        youtube: {
+            type: String
         },
+        twitter: String,
+        facebook: String,
+        linkedin: String,
+        instagram: String,
     },
     {
         timestamps: true,
